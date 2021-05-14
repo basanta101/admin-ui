@@ -1,7 +1,8 @@
 .searchInput {
-   width: calc(100% - 34px);
-   height: 30px;
-   border: 1px solid #aaa;
-   border-radius: 4px;
-   padding: 0 16px;
+  width: calc(100% - 34px);
+  height: 30px;
+  border: 1px solid #aaa;
+  border-radius: 4px;
+  padding: 0 16px;
+  margin-bottom: 4px;
 }

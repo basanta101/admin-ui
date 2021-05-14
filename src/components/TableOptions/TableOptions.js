@@ -1,21 +1,29 @@
 import classNames from "classnames";
 import "./TableOptions.css";
 
-const CellInput = ({ onDeleteCb, onEditCb, onDoneCb, isRowInEditMode }) => {
+const CellInput = ({
+  handleRowDelBtnClick = (f) => f,
+  handleRowEditBtnClick = (f) => f,
+  onDone = (f) => f,
+  isRowInEditMode = false,
+}) => {
   return (
-    <div>
-      <button className={classNames("delBtn", "btn")} onClick={onDeleteCb}>
+    <>
+      <button
+        className={classNames("delBtn", "btn")}
+        onClick={handleRowDelBtnClick}
+      >
         X
       </button>
       <button
         className="btn"
         onClick={() => {
-          isRowInEditMode ? onDoneCb() : onEditCb();
+          isRowInEditMode ? onDone() : handleRowEditBtnClick();
         }}
       >
         {isRowInEditMode ? "DONE" : "EDIT"}
       </button>
-    </div>
+    </>
   );
 };
 

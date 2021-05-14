@@ -1,21 +1,29 @@
-import classNames from 'classnames';
+import classNames from "classnames";
 import "./TableBody.css";
 
-const TableBody = ({ rows = [], columns = [], keyId = "name", selectedRows }) => {
+const TableBody = ({
+  rows = [],
+  columns = [],
+  keyId = "name",
+  selectedRows = [],
+}) => {
   return (
     <div className="tableBody">
       {rows.map((row) => {
         return (
-          <div className={classNames('tableRow', {'selectedRow': selectedRows.includes(row.id)})}
-          key={row[keyId]}
+          <div
+            className={classNames("tableRow", {
+              selectedRow: selectedRows.includes(row.id),
+            })}
+            key={row[keyId]}
           >
             {columns.map((colItem, index) => (
-              <div 
-              className={classNames({'tableCell': index })} 
-              key={`${row[keyId]}_${colItem.colId}`}
+              <div
+                className={classNames({ tableCell: index })}
+                key={`${row[keyId]}_${colItem.colId}`}
               >
                 {" "}
-                {colItem.Cell?.({ data: row }) ?? row[colItem.accessor]}
+                {colItem.Cell?.({ data: row })}
               </div>
             ))}
           </div>

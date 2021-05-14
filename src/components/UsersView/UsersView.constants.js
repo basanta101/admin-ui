@@ -1,70 +1,113 @@
-import { CheckBox, TableOptions, CellInput } from '../index'
+import { CheckBox, TableOptions, CellInput } from "../index";
+import "./UsersView.css";
 
-export const columns = ({ handleCheckCB, onDeleteCb, onEditCb, rowInEditModeData, onCellDataChangeCb, onRowEditDoneCb }) =>{
+export const columns = ({
+  handleCheckRow = (f) => f,
+  handleCheckAllRow = (f) => f,
+  isAllRowsInViewChecked = false,
+  handleRowDelBtnClick = (f) => f,
+  handleRowEditBtnClick = (f) => f,
+  rowInEditModeData = {},
+  onCellDataChange = (f) => f,
+  onRowEditDone = (f) => f,
+  selectedRows = [],
+}) => {
+  return [
+    {
+      Header: ({ data }) => {
+        return (
+          <CheckBox
+            handleCheckCb={(checked) => handleCheckAllRow({ ...data, checked })}
+            checked={isAllRowsInViewChecked}
+          />
+        );
+      },
+      colId: "checkBoxCol",
+      Cell: ({ data }) => {
+        return (
+          <CheckBox
+            handleCheckCb={(checked) => handleCheckRow({ ...data, checked })}
+            checked={selectedRows.includes(data.id)}
+          />
+        );
+      },
+    },
+    {
+      Header: () => <span className="colLabel">Name</span>,
+      colId: "nameCol",
+      Cell: ({ data }) => {
+        const { id, name } = rowInEditModeData;
+        return (
+          <>
+            {id === data.id ? (
+              <CellInput
+                value={name}
+                onChange={(val) => onCellDataChange({ type: "name", val })}
+                pattern='[a-zA-Z]'
+              />
+            ) : (
+              <span className="cellText">{data.name || "--"}</span>
+            )}
+          </>
+        );
+      },
+    },
+    {
+      Header: () => <span className="colLabel">Email</span>,
+      colId: "emailCol",
+      Cell: ({ data }) => {
+        const { id, email } = rowInEditModeData;
+        return (
+          <>
+            {id === data.id ? (
+              <CellInput
+                value={email}
+                onChange={(val) => onCellDataChange({ type: "email", val })}
+                type="email"
+              />
+            ) : (
+              <span className="cellText">{data.email || "--"}</span>
+            )}
+          </>
+        );
+      },
+    },
+    {
+      Header: () => <span className="colLabel">Role</span>,
+      colId: "roleCol",
+      Cell: ({ data }) => {
+        const { id, role } = rowInEditModeData;
+        return (
+          <>
+            {id === data.id ? (
+              <CellInput
+                value={role}
+                onChange={(val) => onCellDataChange({ type: "role", val })}
+              />
+            ) : (
+              <span className="cellText">{data.role || "--"}</span>
+            )}
+          </>
+        );
+      },
+    },
+    {
+      Header: () => <span className="colLabel">Actions</span>,
+      colId: "actionsCol",
+      Cell: ({ data }) => {
+        return (
+          <TableOptions
+            handleRowDelBtnClick={() => handleRowDelBtnClick(data)}
+            handleRowEditBtnClick={() => handleRowEditBtnClick(data)}
+            onDone={onRowEditDone}
+            isRowInEditMode={data.id === rowInEditModeData.id}
+          />
+        );
+      },
+    },
+  ];
+};
 
-    return [
-        {
-            header: null,
-            accessor: null,
-            useCellForColHeader: true,
-            colId: 'checkBoxCol',
-            Cell : ({data}) => {
-                return <CheckBox handleCheckCB={(checked) => handleCheckCB({ ...data, checked})}/>
-            },
-        },
-        {
-            header: 'Name',
-            accessor: 'name',
-            colId: 'nameCol',
-            Cell : ({data}) => {
-                const { id, name } = rowInEditModeData;
-                return (
-                    <>{
-                        id === data.id ? <CellInput value={name} onChangeCb={(val) => onCellDataChangeCb({ type: 'name', val})} /> : <span>{data.name||'--'}</span>
-                    }</>
-                )
-            },
-        },
-        {
-            header: 'Email',
-            accessor: 'email',
-            colId: 'emailCol',
-            Cell : ({data}) => {
-                const { id, email } = rowInEditModeData;
-                return (
-                    <>{
-                        id === data.id ? <CellInput value={email}  onChangeCb={(val) => onCellDataChangeCb({ type: 'email', val})} /> : <span>{data.email || '--'}</span>
-                    }</>
-                )
-            },
-        },
-        {
-            header: 'Role',
-            accessor: 'role',
-            colId: 'roleCol',
-            Cell : ({data}) => {
-                const { id, role } = rowInEditModeData;
-                return (
-                    <>{
-                        id === data.id ? <CellInput value={role} onChangeCb={(val) => onCellDataChangeCb({ type: 'role', val})} /> : <span>{data.role || '--'}</span>
-                    }</>
-                )
-            },
-        },
-        {
-            header: 'Actions',
-            accessor: null,
-            colId: 'actionsCol',
-            useCellForColHeader: false,
-            Cell: ({data}) => {
-                return <TableOptions
-                 onDeleteCb={() => onDeleteCb(data)}
-                  onEditCb={() => onEditCb(data)}
-                  onDoneCb={() => onRowEditDoneCb()}
-                  isRowInEditMode={data.id === rowInEditModeData.id}
-                  // edit text
-                   />
-            }
-        }
-    ];
-}
+export const pageSize = 10;
+
+export const SEARCH_INPUT_PLACEHOLDER = 'Search by name, email or role'

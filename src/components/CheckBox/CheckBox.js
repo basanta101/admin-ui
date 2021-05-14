@@ -1,21 +1,14 @@
-import { useState } from 'react';
+const CheckBox = ({ checked = false, handleCheckCb = (f) => f }) => {
+  const handleCheck = (ev) => {
+    const { checked } = ev.target;
+    handleCheckCb?.(checked);
+  };
 
-
-const CheckBox = ({ checked = false, handleCheckCB = (f) => f }) => {
-    const [ checkValue, updateCheckValue] = useState(checked);
-
-    const handleCheck = (ev) => {
-       console.log('ppp', ev.target.checked);
-       const { checked } = ev.target;
-       updateCheckValue(checked);
-       handleCheckCB?.(checked);
-    }
-
-   return (
-       <>
-         <input type="checkbox" onChange={handleCheck} defaultChecked={checkValue}/>
-       </>
-   )
+  return (
+    <>
+      <input type="checkbox" onChange={handleCheck} checked={checked} />
+    </>
+  );
 };
 
 export default CheckBox;

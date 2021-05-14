@@ -4,7 +4,7 @@ import CheckBox from './CheckBox/CheckBox';
 import Pagination from './Pagination/Pagination';
 import SearchInput from './SearchInput/SearchInput';
 import TableOptions from './TableOptions/TableOptions';
-import CellInput from './CellInput/CellInput'
+import CellInput from './CellInput/CellInput';
 
 export {
     Table,

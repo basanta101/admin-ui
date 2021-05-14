@@ -1,21 +1,37 @@
-export const splitIntoPages = (data, pageSize = 10) => {
-  const pages = data.reduce((acc, cv, index, arr) => {
-    return {
-      ...acc,
-      [index + 1]: arr.splice(index, pageSize),
-    };
-  }, {});
-  const totalPages = Object.keys(pages).length
-  return { pages, totalPages };
+export const paginate = (array = [], pageSize = 10, pageNumber = 1) => {
+  // human-readable page numbers usually start with 1, so we reduce 1 in the first argument
+  return array.slice((pageNumber - 1) * pageSize, pageNumber * pageSize);
 };
 
-export const filterUsers = (data, searchText, pageSize = 10) => {
-  let temp = [...data];
-  if(!searchText) {
-    return splitIntoPages(data, pageSize)
-  }
-  let searchVal = searchText.toLowerCase()
-  let filteredUsers = temp
-    .filter(item => item.name.toLowerCase().includes(searchVal)||item.role.toLowerCase().includes(searchVal)||item.email.toLowerCase().includes(searchVal));
-  return splitIntoPages(filteredUsers, pageSize);
-}
+export const calculateTotalPages = (arr, pageSize) =>
+  Math.ceil(arr.length / pageSize);
+
+export const validateRowFields = (rowData = {}) => {
+  let isValid = true;
+  const errorKeys = [];
+  let errMsg = "";
+  const { id, ...fieldsToValidate } = rowData;
+  Object.entries(fieldsToValidate).forEach(([key, value]) => {
+    const isEmptyField = !value;
+    const isInValidEmail = key === "email" && !/^\S+@\S+\.\S+$/.test(value);
+    const isInValidRole =
+      key === "role" && !["admin", "member"].includes(value.toLowerCase());
+    const isInValidName = key === "name" && !/[a-zA-Z ]/.test(value);
+
+    if (isEmptyField || isInValidEmail || isInValidRole || isInValidName) {
+      errorKeys.push(key);
+      isValid = false;
+      return;
+    }
+  });
+
+  errMsg = `
+    Please Check: ${errorKeys.join(", ")} field(s)
+
+    P.S: 
+      Name cannot be empty, it can only contain aplhabets and spaces,
+      Email cannot be invalid and Role can be either Member or Admin
+  `;
+
+  return { isValid, errorKeys, errMsg };
+};

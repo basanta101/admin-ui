@@ -1,17 +1,18 @@
 .tableRow {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    height: 30px;
-    width: 100%;
-    border-bottom: 1px solid #aaa;
-    align-items: center;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  height: 30px;
+  width: 100%;
+  border-bottom: 1px solid #aaa;
+  align-items: center;
 }
 
 .selectedRow {
-    background: #aaa;
+  background: #aaa;
 }
 
 .tableCell {
-   width: 20%;
+  width: 20%;
+  display: flex;
 }
