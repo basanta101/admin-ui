@@ -26,8 +26,7 @@ export const validateRowFields = (rowData = {}) => {
   });
 
   errMsg = `
-    Please Check: ${errorKeys.join(", ")} field(s)
-
+    Please Check: ${errorKeys.join(", ")} field(s).
     P.S: 
       Name cannot be empty, it can only contain aplhabets and spaces,
       Email cannot be invalid and Role can be either Member or Admin

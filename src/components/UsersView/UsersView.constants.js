@@ -11,6 +11,8 @@ export const columns = ({
   onCellDataChange = (f) => f,
   onRowEditDone = (f) => f,
   selectedRows = [],
+  onBlurCellInput = (f) => f,
+  isAllRowsDeleted = false,
 }) => {
   return [
     {
@@ -19,6 +21,7 @@ export const columns = ({
           <CheckBox
             handleCheckCb={(checked) => handleCheckAllRow({ ...data, checked })}
             checked={isAllRowsInViewChecked}
+            disabled={isAllRowsDeleted}
           />
         );
       },
@@ -44,6 +47,7 @@ export const columns = ({
                 value={name}
                 onChange={(val) => onCellDataChange({ type: "name", val })}
                 pattern='[a-zA-Z]'
+                onBlur={onBlurCellInput}
               />
             ) : (
               <span className="cellText">{data.name || "--"}</span>
@@ -64,6 +68,7 @@ export const columns = ({
                 value={email}
                 onChange={(val) => onCellDataChange({ type: "email", val })}
                 type="email"
+                onBlur={onBlurCellInput}
               />
             ) : (
               <span className="cellText">{data.email || "--"}</span>
@@ -83,6 +88,8 @@ export const columns = ({
               <CellInput
                 value={role}
                 onChange={(val) => onCellDataChange({ type: "role", val })}
+                onBlur={onBlurCellInput}
+                autofocus
               />
             ) : (
               <span className="cellText">{data.role || "--"}</span>

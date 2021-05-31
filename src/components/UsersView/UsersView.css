@@ -19,6 +19,10 @@
   height: 25px;
 }
 
+.footerDelBtn:disabled {
+  cursor:not-allowed;
+}
+
 .colLabel {
   font-weight: 600;
 }

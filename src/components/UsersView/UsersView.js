@@ -1,5 +1,9 @@
 import { useState, useEffect } from "react";
-import { columns, pageSize, SEARCH_INPUT_PLACEHOLDER } from "./UsersView.constants";
+import {
+  columns,
+  pageSize,
+  SEARCH_INPUT_PLACEHOLDER,
+} from "./UsersView.constants";
 import {
   paginate,
   calculateTotalPages,
@@ -11,26 +15,28 @@ import { Pagination, Table, SearchInput } from "../index";
 const UsersView = () => {
   // replica of orignal data, kept for reference.
   const [orignalUserData, updateOriginalUserData] = useState([]);
-
   /* The array (users), which will be modifed, while performing table operations, 
     such as delete, edit
   */
   const [users, updateUsers] = useState([]);
-
   const [pagination, updatePagination] = useState({
     pageSize,
     currentPageNo: 1,
     totalPages: null,
+    searchStartPageNo: 0,
   });
-  const [searchText, updateSearchText] = useState("");
+  const [searchText, updateSearchText] = useState({
+    isDirty: false,
+    value: "",
+  });
   const [rowInEditModeData, updateRowInEditModeData] = useState({
     id: null,
     name: "",
     email: "",
     role: "",
   });
-  const [selectedRows, updateSelectedRows] = useState([]); // rows which are checked
-  const [isAllRowsInViewChecked, updateCheckAllRowsInView] = useState(false); // if true check all rows in view
+  const [selectedRows, updateSelectedRows] = useState([]); // rows which are checked.
+  const [allRowsCheckedPages, updateAllRowsCheckedPages] = useState([]); // pages with all rows selected.
 
   useEffect(() => {
     try {
@@ -66,7 +72,7 @@ const UsersView = () => {
   const handleSearchTextChange = (event) => {
     const { value } = event.target;
     const searchVal = value.toLowerCase();
-    const { pageSize } = pagination;
+    const { pageSize, currentPageNo, searchStartPageNo } = pagination;
     const filteredUsers = orignalUserData.filter(
       (item) =>
         item.name.toLowerCase().includes(searchVal) ||
@@ -75,12 +81,22 @@ const UsersView = () => {
     );
     updateUsers(filteredUsers);
     const newTotalPages = calculateTotalPages(filteredUsers, pageSize);
+    let newSearchStartPageNo = searchStartPageNo;
+    if (!searchText.isDirty) {
+      // isDirty is false, set the search start pageNo
+      newSearchStartPageNo = currentPageNo;
+    }
+    if (currentPageNo > newTotalPages) {
+      // searchStartPageNo = 0;
+    }
     updatePagination({
       ...pagination,
-      currentPageNo: 1,
+      currentPageNo: value ? 1 : searchStartPageNo, // if user searches
       totalPages: newTotalPages,
+      searchStartPageNo: newSearchStartPageNo,
     });
-    updateSearchText(event.target.value);
+
+    updateSearchText({ value, isDirty: value ? true : false });
   };
 
   const handleCheckRow = (checkedRowData) => {
@@ -94,17 +110,30 @@ const UsersView = () => {
   };
 
   const handleCheckAllRow = (checkedColData) => {
-    const { colId: checkHappenedOnColumnHeader, checked } = checkedColData;
-    if (checkHappenedOnColumnHeader) {
-      let selectedIds = [];
-      if (checked) {
-        const { pageSize, currentPageNo } = pagination;
-        const checkedUsers = paginate(users, pageSize, currentPageNo);
-        selectedIds = checkedUsers.map((item) => item.id);
-      }
-      updateSelectedRows(selectedIds);
+    const { checked } = checkedColData;
+    let selectedIds = selectedRows;
+    let allRowsInViewCheckedPageNos = allRowsCheckedPages;
+    const { pageSize, currentPageNo } = pagination;
+    const checkedUsers = paginate(users, pageSize, currentPageNo).map(
+      (item) => item.id
+    );
+    if (checked) {
+      // check all the rows in view, push their ids into selectedIds(array)
+      selectedIds = selectedRows.concat(checkedUsers);
+      // store the page no for which all the rows are selected.
+      allRowsInViewCheckedPageNos =
+        allRowsInViewCheckedPageNos.concat(currentPageNo);
     }
-    updateCheckAllRowsInView(checked);
+
+    if (!checked) {
+      selectedIds = selectedRows.filter((row) => !checkedUsers.includes(row));
+      allRowsInViewCheckedPageNos = allRowsInViewCheckedPageNos.filter(
+        (pageNo) => pageNo !== currentPageNo
+      );
+    }
+
+    updateSelectedRows(selectedIds);
+    updateAllRowsCheckedPages(allRowsInViewCheckedPageNos);
   };
 
   const handleRowEditBtnClick = (data) => {
@@ -125,7 +154,7 @@ const UsersView = () => {
     const editedUsers = users.map((item) =>
       item.id === rowInEditModeData.id ? { ...rowInEditModeData } : item
     );
-
+    updateOriginalUserData([...editedUsers]);
     updateUsers(editedUsers);
     updateRowInEditModeData({
       id: null,
@@ -153,15 +182,20 @@ const UsersView = () => {
   };
 
   const handleFooterDelBtnClick = () => {
-    if (!selectedRows.length) return;
+    if (!selectedRows.length) return; // no row is selected return.
     const { pageSize, currentPageNo } = pagination;
-    let filteredUsers = users.filter((item) => !selectedRows.includes(item.id));
+    let filteredUsers = users.filter((item) => !selectedRows.includes(item.id)); // users(rows of table) which are not selected
     const newTotalPages = calculateTotalPages(filteredUsers, pageSize);
-    updateUsers(filteredUsers);
-    updateCheckAllRowsInView(false);
+    updateUsers(filteredUsers); // update the table by deleting selected users(table rows)
+    updateAllRowsCheckedPages([]); // remove pageNo from all selected pageNos row arrays
+    let newCurrentPageNo = currentPageNo;
+    if (currentPageNo > newTotalPages) {
+      // we need to decrement the current page no.
+      newCurrentPageNo = newTotalPages;
+    }
     updatePagination({
       ...pagination,
-      currentPageNo: Math.max(1, currentPageNo - 1),
+      currentPageNo: Math.max(1, newCurrentPageNo),
       totalPages: Math.max(1, newTotalPages),
     });
   };
@@ -172,37 +206,55 @@ const UsersView = () => {
     return paginate(users, currentPageSize, currentPageNo);
   };
 
+  const onBlurCellInput = () => {
+    if (!rowInEditModeData.id) return;
+
+    // if rowEdit was goin on, save it.
+    onRowEditDone();
+  };
+
   return (
     <div className="wrapper">
       <SearchInput
         placeholder={SEARCH_INPUT_PLACEHOLDER}
-        value={searchText}
+        value={searchText.value}
         onChange={handleSearchTextChange}
+        disabled={!users.length}
       />
       <Table
         columns={columns({
           handleCheckRow,
           handleCheckAllRow,
-          isAllRowsInViewChecked,
+          isAllRowsInViewChecked: allRowsCheckedPages.includes(
+            pagination.currentPageNo
+          ),
           handleRowDelBtnClick,
           handleRowEditBtnClick,
           rowInEditModeData,
           onCellDataChange,
           onRowEditDone,
           selectedRows,
+          onBlurCellInput,
+          isAllRowsDeleted: !users.length,
         })}
         data={getPaginatedData(users)}
         selectedRows={selectedRows}
       />
       <div className="footerWrapper">
-        <button className="footerDelBtn" onClick={handleFooterDelBtnClick}>
-          Delete Selected
-        </button>
         {users.length ? (
-          <Pagination
-            pagination={pagination}
-            handlePageChange={handlePageChange}
-          />
+          <>
+            <button
+              className="footerDelBtn"
+              onClick={handleFooterDelBtnClick}
+              disabled={!selectedRows.length}
+            >
+              Delete Selected
+            </button>
+            <Pagination
+              pagination={pagination}
+              handlePageChange={handlePageChange}
+            />
+          </>
         ) : null}
       </div>
     </div>
