@@ -1,0 +1,13 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders a snapshot of CellInput 1`] = `
+<input
+  aria-label="cell-input"
+  className="cellInput"
+  onBlur={[Function]}
+  onChange={[Function]}
+  pattern=""
+  type="text"
+  value=""
+/>
+`;

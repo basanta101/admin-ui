@@ -12,6 +12,7 @@ const CellInput = ({
       <button
         className={classNames("delBtn", "btn")}
         onClick={handleRowDelBtnClick}
+        data-testid='delBtn'
       >
         X
       </button>
@@ -20,6 +21,7 @@ const CellInput = ({
         onClick={() => {
           isRowInEditMode ? onDone() : handleRowEditBtnClick();
         }}
+        data-testid='done_edit_Btn'
       >
         {isRowInEditMode ? "DONE" : "EDIT"}
       </button>

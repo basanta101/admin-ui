@@ -1,3 +1,7 @@
+.tableBody {
+  height: calc(100% - 50px);
+}
+
 .tableRow {
   display: flex;
   flex-direction: row;

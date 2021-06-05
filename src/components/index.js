@@ -5,6 +5,7 @@ import Pagination from './Pagination/Pagination';
 import SearchInput from './SearchInput/SearchInput';
 import TableOptions from './TableOptions/TableOptions';
 import CellInput from './CellInput/CellInput';
+import ErrorBoundary from './ErrorBoundary/ErrorBoundary';
 
 export {
     Table,
@@ -14,4 +15,5 @@ export {
     SearchInput,
     TableOptions,
     CellInput,
+    ErrorBoundary,
 };

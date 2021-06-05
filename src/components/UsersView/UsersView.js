@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import _ from "lodash";
 import {
   columns,
   pageSize,
@@ -11,11 +12,12 @@ import {
 } from "./UsersView.utils";
 import "./UsersView.css";
 import { Pagination, Table, SearchInput } from "../index";
+import { useFetch } from "../../utils";
 
 const UsersView = () => {
-  // replica of orignal data, kept for reference.
-  const [orignalUserData, updateOriginalUserData] = useState([]);
-  /* The array (users), which will be modifed, while performing table operations, 
+  // replica of original data, kept for reference.
+  const [originalUserData, updateOriginalUserData] = useState([]);
+  /* The array (users), which will be modified, while performing table operations, 
     such as delete, edit
   */
   const [users, updateUsers] = useState([]);
@@ -39,6 +41,15 @@ const UsersView = () => {
   const [allRowsCheckedPages, updateAllRowsCheckedPages] = useState([]); // pages with all rows selected.
 
   useEffect(() => {
+    // const url = `https://geektrust.s3-ap-southeast-1.amazonaws.com/adminui-problem/members.json`;
+    // const { response: users } = useFetch(url);
+    // const totalPages = calculateTotalPages(users, pageSize);
+    // updateOriginalUserData(users);
+    // updateUsers(users);
+    // updatePagination({
+    //   ...pagination,
+    //   totalPages,
+    // });
     try {
       fetch(
         `https://geektrust.s3-ap-southeast-1.amazonaws.com/adminui-problem/members.json`
@@ -73,7 +84,7 @@ const UsersView = () => {
     const { value } = event.target;
     const searchVal = value.toLowerCase();
     const { pageSize, currentPageNo, searchStartPageNo } = pagination;
-    const filteredUsers = orignalUserData.filter(
+    const filteredUsers = originalUserData.filter(
       (item) =>
         item.name.toLowerCase().includes(searchVal) ||
         item.role.toLowerCase().includes(searchVal) ||
@@ -85,9 +96,6 @@ const UsersView = () => {
     if (!searchText.isDirty) {
       // isDirty is false, set the search start pageNo
       newSearchStartPageNo = currentPageNo;
-    }
-    if (currentPageNo > newTotalPages) {
-      // searchStartPageNo = 0;
     }
     updatePagination({
       ...pagination,
@@ -101,7 +109,7 @@ const UsersView = () => {
 
   const handleCheckRow = (checkedRowData) => {
     const { checked, id } = checkedRowData;
-
+    // TODO: refactor to use one update
     if (checked && !selectedRows.includes(id)) {
       updateSelectedRows(selectedRows.concat(id));
     } else {
@@ -169,7 +177,8 @@ const UsersView = () => {
     const filteredUsers = users.filter((user) => user.id !== data.id);
     const newTotalPages = calculateTotalPages(filteredUsers, pageSize);
     updateUsers(filteredUsers);
-
+    // let pagination
+    // TODO: refactor to use one update
     if (newTotalPages < prevTotalPages) {
       updatePagination({
         ...pagination,
@@ -208,8 +217,7 @@ const UsersView = () => {
 
   const onBlurCellInput = () => {
     if (!rowInEditModeData.id) return;
-
-    // if rowEdit was goin on, save it.
+    // if rowEdit was going on, save it.
     onRowEditDone();
   };
 
@@ -219,7 +227,6 @@ const UsersView = () => {
         placeholder={SEARCH_INPUT_PLACEHOLDER}
         value={searchText.value}
         onChange={handleSearchTextChange}
-        disabled={!users.length}
       />
       <Table
         columns={columns({
@@ -262,3 +269,6 @@ const UsersView = () => {
 };
 
 export default UsersView;
+
+// TODO: check if any code is using spread, ans it requires a deep copy
+// use lodash to do deep copy instead of spread operator.

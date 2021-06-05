@@ -1,5 +1,13 @@
 import { rest } from "msw";
 import { setupServer } from "msw/node";
+import render from '@testing-library/react';
+import renderer from "react-test-renderer";
+import UsersView from "../UsersView";
+
+it("renders a snapshot of Pagination Component", () => {
+  const tree = renderer.create(<UsersView />).toJSON();
+  expect(tree).toMatchSnapshot();
+});
 
 const server = setupServer(
   rest.get(

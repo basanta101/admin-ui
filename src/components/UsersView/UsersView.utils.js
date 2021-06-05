@@ -34,3 +34,28 @@ export const validateRowFields = (rowData = {}) => {
 
   return { isValid, errorKeys, errMsg };
 };
+
+export const debounce = (fn, delay = 1000) => {
+  let timer;
+  return function () {
+    let context = this, args = arguments;
+    clearTimeout(timer);
+    timer = setTimeout(() => {
+      fn.apply(context, args);
+    }, delay);
+  };
+};
+
+export const throttle = (fn, limit) => {
+  let shouldCallFn = true;
+  return function () {
+    let context = this, args = arguments;
+    if(shouldCallFn) {
+      fn.apply(context, args);
+      shouldCallFn = false;
+    }
+    setTimeout(() => {
+      shouldCallFn = true;
+    }, limit)
+  }
+}

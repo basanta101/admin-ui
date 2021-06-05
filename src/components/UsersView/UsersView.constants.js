@@ -40,17 +40,18 @@ export const columns = ({
       colId: "nameCol",
       Cell: ({ data }) => {
         const { id, name } = rowInEditModeData;
+        const nameValue = data.name || "--";
         return (
           <>
             {id === data.id ? (
               <CellInput
                 value={name}
                 onChange={(val) => onCellDataChange({ type: "name", val })}
-                pattern='[a-zA-Z]'
+                pattern="[a-zA-Z]"
                 onBlur={onBlurCellInput}
               />
             ) : (
-              <span className="cellText">{data.name || "--"}</span>
+              <span className="cellText" title={nameValue}>{nameValue}</span>
             )}
           </>
         );
@@ -61,6 +62,7 @@ export const columns = ({
       colId: "emailCol",
       Cell: ({ data }) => {
         const { id, email } = rowInEditModeData;
+        const emailValue = data.email || "--";
         return (
           <>
             {id === data.id ? (
@@ -71,7 +73,9 @@ export const columns = ({
                 onBlur={onBlurCellInput}
               />
             ) : (
-              <span className="cellText">{data.email || "--"}</span>
+              <span className="cellText" title={emailValue}>
+                {emailValue}
+              </span>
             )}
           </>
         );
@@ -82,6 +86,7 @@ export const columns = ({
       colId: "roleCol",
       Cell: ({ data }) => {
         const { id, role } = rowInEditModeData;
+        const roleValue = data.role || "--";
         return (
           <>
             {id === data.id ? (
@@ -92,7 +97,9 @@ export const columns = ({
                 autofocus
               />
             ) : (
-              <span className="cellText">{data.role || "--"}</span>
+              <span className="cellText" title={roleValue}>
+                {roleValue}
+              </span>
             )}
           </>
         );
@@ -117,4 +124,4 @@ export const columns = ({
 
 export const pageSize = 10;
 
-export const SEARCH_INPUT_PLACEHOLDER = 'Search by name, email or role'
+export const SEARCH_INPUT_PLACEHOLDER = "Search by name, email or role";

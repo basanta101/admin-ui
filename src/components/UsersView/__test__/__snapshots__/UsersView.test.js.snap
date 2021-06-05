@@ -1,0 +1,76 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders a snapshot of Pagination Component 1`] = `
+<div
+  className="wrapper"
+>
+  <input
+    className="searchInput"
+    onChange={[Function]}
+    placeholder="Search by name, email or role"
+    type="text"
+    value=""
+  />
+  <div
+    className="tableWrapper"
+  >
+    <div
+      className="columnWrapper"
+    >
+      <div
+        className=""
+      >
+        <input
+          checked={false}
+          className="checkBox disabled"
+          disabled={true}
+          onChange={[Function]}
+          type="checkbox"
+        />
+      </div>
+      <div
+        className="headerCol"
+      >
+        <span
+          className="colLabel"
+        >
+          Name
+        </span>
+      </div>
+      <div
+        className="headerCol"
+      >
+        <span
+          className="colLabel"
+        >
+          Email
+        </span>
+      </div>
+      <div
+        className="headerCol"
+      >
+        <span
+          className="colLabel"
+        >
+          Role
+        </span>
+      </div>
+      <div
+        className="headerCol"
+      >
+        <span
+          className="colLabel"
+        >
+          Actions
+        </span>
+      </div>
+    </div>
+    <div
+      className="tableBody"
+    />
+  </div>
+  <div
+    className="footerWrapper"
+  />
+</div>
+`;

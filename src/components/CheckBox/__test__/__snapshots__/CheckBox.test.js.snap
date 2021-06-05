@@ -1,0 +1,11 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders a snapshot of CheckBox 1`] = `
+<input
+  checked={false}
+  className="checkBox"
+  disabled={false}
+  onChange={[Function]}
+  type="checkbox"
+/>
+`;

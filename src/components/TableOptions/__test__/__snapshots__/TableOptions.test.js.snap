@@ -1,0 +1,20 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders a snapshot of TableOptions Component 1`] = `
+Array [
+  <button
+    className="delBtn btn"
+    data-testid="delBtn"
+    onClick={[Function]}
+  >
+    X
+  </button>,
+  <button
+    className="btn"
+    data-testid="done_edit_Btn"
+    onClick={[Function]}
+  >
+    EDIT
+  </button>,
+]
+`;

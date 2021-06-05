@@ -1,0 +1,8 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders a snapshot of Pagination Component 1`] = `
+<input
+  className="searchInput"
+  type="text"
+/>
+`;

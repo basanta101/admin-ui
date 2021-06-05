@@ -1,0 +1,39 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders a snapshot of Pagination Component 1`] = `
+<div
+  className="paginationWrapper"
+>
+  <button
+    data-testid="getFirstPageBtn"
+    disabled={false}
+    onClick={[Function]}
+  >
+    &lt;&lt;
+  </button>
+  <button
+    data-testid="getPrevPageBtn"
+    disabled={false}
+    onClick={[Function]}
+  >
+    &lt;
+  </button>
+  <span />
+  /
+  <span />
+  <button
+    data-testid="getNextPageBtn"
+    disabled={true}
+    onClick={[Function]}
+  >
+    &gt;
+  </button>
+  <button
+    data-testid="getLastPageBtn"
+    disabled={true}
+    onClick={[Function]}
+  >
+    &gt;&gt;
+  </button>
+</div>
+`;

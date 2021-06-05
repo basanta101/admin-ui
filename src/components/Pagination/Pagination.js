@@ -12,12 +12,14 @@ const Pagination = ({ pagination = {}, handlePageChange = (f) => f }) => {
       <button
         onClick={() => handlePageChange(1)}
         disabled={isFirstPageInView}
+        data-testid='getFirstPageBtn'
       >
         {"<<"}
       </button>
       <button
         onClick={() => handlePageChange(currentPageNo - 1)}
         disabled={isFirstPageInView}
+        data-testid='getPrevPageBtn'
       >
         {"<"}
       </button>
@@ -25,12 +27,15 @@ const Pagination = ({ pagination = {}, handlePageChange = (f) => f }) => {
       <button
         onClick={() => handlePageChange(currentPageNo + 1)}
         disabled={isLastPageInView}
+        data-testid='getNextPageBtn'
+
       >
         {">"}
       </button>
       <button
         onClick={() => handlePageChange(totalPages)}
         disabled={isLastPageInView}
+        data-testid='getLastPageBtn'
       >
         {">>"}
       </button>
